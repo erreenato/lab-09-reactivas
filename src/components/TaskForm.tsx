@@ -16,6 +16,8 @@ export const TaskForm = () => {
   // Estado local para controlar los inputs del formulario
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  // P5: Estado local para el nuevo input de categoría
+  const [category, setCategory] = useState("");
 
   // Obtenemos la acción addTask desde el store global de Zustand
   const addTask = useTaskStore((state) => state.addTask);
@@ -26,10 +28,11 @@ export const TaskForm = () => {
     // Evitamos agregar tareas vacías
     if (!title.trim() || !description.trim()) return;
 
-    // P3: Llamamos a addTask y limpiamos los campos del formulario
-    addTask(title, description);
+    // P5: Pasamos la categoría opcional al dispatch de addTask
+    addTask(title, description, category);
     setTitle("");
     setDescription("");
+    setCategory(""); // P5: Limpiamos también el input de categoría
   };
 
   return (
@@ -46,6 +49,13 @@ export const TaskForm = () => {
         placeholder="Descripción"
         value={description}
         onChange={(e) => setDescription(e.target.value)}
+      />
+      {/* P5: Input adicional para pedir la categoría */}
+      <input
+        type="text"
+        placeholder="Categoría"
+        value={category}
+        onChange={(e) => setCategory(e.target.value)}
       />
       <button type="submit">Agregar tarea</button>
     </form>

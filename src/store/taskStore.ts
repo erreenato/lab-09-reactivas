@@ -25,6 +25,9 @@ interface TaskState {
   // P4: ID de la tarea seleccionada en el modal (null si el modal está cerrado)
   selectedTaskId: string | null;
 
+  // P5: Categoría seleccionada (null representa "Todas", string representa la categoría activa)
+  selectedCategory: string | null;
+
   // Acción para agregar una tarea recibiendo título, descripción y categoría opcional
   addTask: (title: string, description: string, category?: string) => void;
 
@@ -32,6 +35,9 @@ interface TaskState {
   openModal: (id: string) => void;
   closeModal: () => void;
   updateTaskStatus: (id: string, newStatus: TaskStatus) => void;
+
+  // P5: Acción para cambiar la categoría seleccionada
+  setSelectedCategory: (category: string | null) => void;
 }
 
 export const useTaskStore = create<TaskState>((set) => ({
@@ -41,8 +47,11 @@ export const useTaskStore = create<TaskState>((set) => ({
   // P4: El modal parte cerrado (sin tarea seleccionada)
   selectedTaskId: null,
 
+  // P5: Estado inicial del filtro de categoría (null = "Todas")
+  selectedCategory: null,
+
   // P2: Implementación de addTask con categoría opcional por defecto "general"
-  addTask: (title, description) =>
+  addTask: (title, description, category) =>
     set((state) => {
       // Generamos una nueva tarea con id único, fecha ISO y estado inicial "to_do"
       const newTask: Task = {
@@ -51,6 +60,9 @@ export const useTaskStore = create<TaskState>((set) => ({
         description,
         status: "to_do",                     // El estado inicial siempre es "to_do"
         createdAt: new Date().toISOString(), // Fecha en formato ISO string
+        
+        // P5: Si el usuario no ingresa categoría, se asigna "general" por defecto
+        category: category && category.trim() !== "" ? category.trim() : "general",
       };
 
       // Retornamos un nuevo objeto de estado con un arreglo totalmente nuevo (inmutable)
@@ -72,6 +84,10 @@ export const useTaskStore = create<TaskState>((set) => ({
         task.id === id ? { ...task, status: newStatus } : task
       ),
     })),
+
+   // P5: Implementación de la acción para actualizar selectedCategory
+   setSelectedCategory: (category: string | null) =>
+    set({ selectedCategory: category }),
 }));
 //
 // Cuidado con la acción que cambia el estado de una tarea: no modifique el

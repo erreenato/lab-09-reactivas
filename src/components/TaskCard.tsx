@@ -24,6 +24,8 @@ export const TaskCard = ({ task }: TaskCardProps) => {
     <div className="task-card" onClick={() => openModal(task.id)}>
       <h3>{task.title}</h3>
       <p className="task-date">{task.createdAt}</p>
+      {/* P5: Muestra la categoría debajo de la fecha */}
+      <p className="task-category">{task.category}</p>
     </div>
   );
 };

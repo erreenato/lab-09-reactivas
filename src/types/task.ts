@@ -15,7 +15,7 @@ export interface Task {
   description: string;
   status: TaskStatus;
   createdAt: string;
-  category?: string; // Lo usaremos más adelante en la P5
+  category: string; // P5: Atributo categoría
 }
 
 // P5: agregue después el atributo de categoría.
