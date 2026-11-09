@@ -9,9 +9,47 @@
 //
 // La barra que lo contiene usa la clase .toolbar del CSS.
 //
-// import { useState } from 'react'
-// import { useTaskStore } from '../store/taskStore'
-//
-// const TaskForm = () => { ... }
-//
-// export default TaskForm
+import { useState } from "react";
+import { useTaskStore } from "../store/taskStore";
+
+export const TaskForm = () => {
+  // Estado local para controlar los inputs del formulario
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+
+  // Obtenemos la acción addTask desde el store global de Zustand
+  const addTask = useTaskStore((state) => state.addTask);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Evitamos agregar tareas vacías
+    if (!title.trim() || !description.trim()) return;
+
+    // P3: Llamamos a addTask y limpiamos los campos del formulario
+    addTask(title, description);
+    setTitle("");
+    setDescription("");
+  };
+
+  return (
+    // Usa las clases CSS de la plantilla para el formulario
+    <form className="task-form" onSubmit={handleSubmit}>
+      <input
+        type="text"
+        placeholder="Título"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+      />
+      <input
+        type="text"
+        placeholder="Descripción"
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+      />
+      <button type="submit">Agregar tarea</button>
+    </form>
+  );
+};
+
+export default TaskForm;

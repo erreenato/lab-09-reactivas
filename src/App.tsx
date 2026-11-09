@@ -1,32 +1,48 @@
-function App() {
-  // P3: el tablero. Lea las tareas del store y reparta cada una en la columna
-  // que le corresponde según su estado. El esqueleto queda así:
-  //
-  //   <>
-  //     <h1>Gestor de tareas</h1>
-  //     <div className="toolbar">
-  //       <TaskForm />
-  //     </div>
-  //     <div className="board">
-  //       {/* una <div className="column"> por estado, con sus TaskCard */}
-  //     </div>
-  //   </>
-  //
-  // P4: agregue <TaskModal /> al final y abra el modal desde TaskCard.
-  //
-  // P6: agregue <CategoryFilter /> a la barra y aplique el filtro a las tareas
-  // para mostrar solo las de la categoría seleccionada.
-  return (
-    <>
-      <h1>Gestor de tareas</h1>
-      <p>
-        Todavía no hay tablero. Empiece por el store en
-        {' '}
-        <code>src/store/taskStore.ts</code>
-        .
-      </p>
-    </>
-  )
-}
+import { useTaskStore } from "./store/taskStore";
+import { TaskForm } from "./components/TaskForm";
+import { TaskCard } from "./components/TaskCard";
+import type { TaskStatus } from "./types/task";
 
-export default App
+// Definición estática de las 3 columnas del tablero Kanban
+const COLUMNS: { id: TaskStatus; title: string }[] = [
+  { id: "to_do", title: "TODO" },
+  { id: "in_progress", title: "IN PROGRESS" },
+  { id: "done", title: "DONE" },
+];
+
+export const App = () => {
+  // P3: Obtenemos la lista global de tareas mediante un selector de Zustand
+  const tasks = useTaskStore((state) => state.tasks);
+
+  return (
+    <div className="container">
+      <h1>Gestor de tareas</h1>
+
+      {/* Formulario para agregar nuevas tareas */}
+      <TaskForm />
+
+      {/* Tablero Kanban con las tres columnas */}
+      <div className="board">
+        {COLUMNS.map((column) => {
+          // P3: Estado derivado: Filtramos las tareas por columna sin duplicar arreglos en el store
+          const columnTasks = tasks.filter(
+            (task) => task.status === column.id
+          );
+
+          return (
+            <div key={column.id} className="column">
+              <h2>{column.title}</h2>
+              <div className="task-list">
+                {columnTasks.map((task) => (
+                  <TaskCard key={task.id} task={task} />
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+export default App;
