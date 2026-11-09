@@ -5,8 +5,19 @@
 // declararlo como un tipo aparte, porque el tablero y el formulario del modal
 // recorren esos tres valores.
 //
-// El estado inicial de una tarea recién creada siempre es "por hacer".
-//
+// El estado inicial de una tarea recién creada siempre es "por hacer".// P1: Definición de valores permitidos para el estado de una tarea
+export type TaskStatus = "to_do" | "in_progress" | "done";
+
+// P1: Interfaz principal para una Tarea
+export interface Task {
+  id: string;
+  title: string;
+  description: string;
+  status: TaskStatus;
+  createdAt: string;
+  category?: string; // Lo usaremos más adelante en la P5
+}
+
 // P5: agregue después el atributo de categoría.
 //
 // export type TaskStatus = ...
