@@ -1,6 +1,7 @@
 import { useTaskStore } from "./store/taskStore";
 import { TaskForm } from "./components/TaskForm";
 import { TaskCard } from "./components/TaskCard";
+import { TaskModal } from "./components/TaskModal";
 import type { TaskStatus } from "./types/task";
 
 // Definición estática de las 3 columnas del tablero Kanban
@@ -41,6 +42,9 @@ export const App = () => {
           );
         })}
       </div>
+      
+      {/* P4: Componente Modal montado en el nivel principal */}
+      <TaskModal />
     </div>
   );
 };

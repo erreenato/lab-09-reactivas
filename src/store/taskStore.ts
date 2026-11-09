@@ -15,22 +15,33 @@
 // junta estado y acciones, y `create` recibiendo una función que usa `set`.
 //
 import { create } from "zustand";
-import type { Task } from "../types/task";
+import type { Task, TaskStatus } from "../types/task";
 
 // Definimos la interfaz del estado y las acciones del store
 interface TaskState {
   // Lista global de tareas
   tasks: Task[];
-  
-  // Acción para agregar una tarea recibiendo solo título y descripción
-  addTask: (title: string, description: string) => void;
+
+  // P4: ID de la tarea seleccionada en el modal (null si el modal está cerrado)
+  selectedTaskId: string | null;
+
+  // Acción para agregar una tarea recibiendo título, descripción y categoría opcional
+  addTask: (title: string, description: string, category?: string) => void;
+
+  // P4: Acciones para el modal y la actualización del estado de una tarea
+  openModal: (id: string) => void;
+  closeModal: () => void;
+  updateTaskStatus: (id: string, newStatus: TaskStatus) => void;
 }
 
 export const useTaskStore = create<TaskState>((set) => ({
   // P2: El store debe partir con la lista de tareas vacía
   tasks: [],
 
-  // P2: Implementación de addTask
+  // P4: El modal parte cerrado (sin tarea seleccionada)
+  selectedTaskId: null,
+
+  // P2: Implementación de addTask con categoría opcional por defecto "general"
   addTask: (title, description) =>
     set((state) => {
       // Generamos una nueva tarea con id único, fecha ISO y estado inicial "to_do"
@@ -47,6 +58,20 @@ export const useTaskStore = create<TaskState>((set) => ({
         tasks: [...state.tasks, newTask],
       };
     }),
+
+  // P4: Abre el modal asignando el ID de la tarea
+  openModal: (id: string) => set({ selectedTaskId: id }),
+
+  // P4: Cierra el modal reseteando el ID a null
+  closeModal: () => set({ selectedTaskId: null }),
+
+  // P4: Actualiza el status de la tarea buscando por id de forma inmutable
+  updateTaskStatus: (id: string, newStatus: TaskStatus) =>
+    set((state) => ({
+      tasks: state.tasks.map((task) =>
+        task.id === id ? { ...task, status: newStatus } : task
+      ),
+    })),
 }));
 //
 // Cuidado con la acción que cambia el estado de una tarea: no modifique el

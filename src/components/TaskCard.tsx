@@ -9,20 +9,20 @@
 // Use las clases .card, .card-title y .card-meta del CSS.
 //
 import type { Task } from "../types/task";
+import { useTaskStore } from "../store/taskStore";
 
-// Definimos las props que recibe el componente TaskCard
 interface TaskCardProps {
   task: Task;
 }
 
 export const TaskCard = ({ task }: TaskCardProps) => {
+  // P4: Obtenemos la acción openModal del store
+  const openModal = useTaskStore((state) => state.openModal);
+
   return (
-    // La clase "task-card" viene resuelta en src/index.css
-    <div className="task-card">
-      {/* Título de la tarea */}
+    // P4: Al hacer clic en la tarjeta se abre el modal para esta tarea
+    <div className="task-card" onClick={() => openModal(task.id)}>
       <h3>{task.title}</h3>
-      
-      {/* Fecha de creación de la tarea */}
       <p className="task-date">{task.createdAt}</p>
     </div>
   );
