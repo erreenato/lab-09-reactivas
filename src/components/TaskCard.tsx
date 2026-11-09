@@ -8,13 +8,24 @@
 //
 // Use las clases .card, .card-title y .card-meta del CSS.
 //
-// import type { Task } from '../types/task'
-// import { useTaskStore } from '../store/taskStore'
-//
-// interface TaskCardProps {
-//   task: Task
-// }
-//
-// const TaskCard = ({ task }: TaskCardProps) => { ... }
-//
-// export default TaskCard
+import type { Task } from "../types/task";
+
+// Definimos las props que recibe el componente TaskCard
+interface TaskCardProps {
+  task: Task;
+}
+
+export const TaskCard = ({ task }: TaskCardProps) => {
+  return (
+    // La clase "task-card" viene resuelta en src/index.css
+    <div className="task-card">
+      {/* Título de la tarea */}
+      <h3>{task.title}</h3>
+      
+      {/* Fecha de creación de la tarea */}
+      <p className="task-date">{task.createdAt}</p>
+    </div>
+  );
+};
+
+export default TaskCard;
